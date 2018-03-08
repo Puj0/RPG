@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import acters.enemy.Animal;
+import acters.enemy.Troll;
+import acters.hero.Hero;
+import acters.hero.Role;
+
 public class Main {
 
 	public static void main(String[] args) {
