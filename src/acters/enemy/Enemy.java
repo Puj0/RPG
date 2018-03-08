@@ -1,5 +1,6 @@
+package acters.enemy;
 
-public abstract class Enemy {
+public abstract class Enemy implements iEnemy {
 	private String name;
 	private int healthPoints;
 	private int attack;
@@ -56,7 +57,6 @@ public abstract class Enemy {
 	}
 
 	public void defend(int damage) {
-		// TODO Auto-generated method stub
 		healthPoints -= damage;
 	}
 	

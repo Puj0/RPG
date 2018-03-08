@@ -1,6 +1,9 @@
+package acters.hero;
 import java.lang.Math;
 
-public class Hero {
+import acters.enemy.Enemy;
+
+public class Hero implements iHero {
 	private String name;
 	private Role role;
 	private int healthPoints;

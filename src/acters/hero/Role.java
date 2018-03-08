@@ -1,3 +1,4 @@
+package acters.hero;
 
 public enum Role {
 	BARBARIAN, BARD, CLERIC, DRUID, FIGHTER, MONK, PALADIN, RANGER, ROGUE, SORCERER, WIZARD 
