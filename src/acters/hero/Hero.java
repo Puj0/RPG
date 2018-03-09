@@ -4,7 +4,7 @@ import java.lang.Math;
 import acters.enemy.Enemy;
 import actions.Action;
 
-public class Hero implements iHero {
+public class Hero implements iHero{
 	private String name;
 	private Role role;
 	private int healthPoints;
@@ -70,6 +70,5 @@ public class Hero implements iHero {
 	public void doAction(Action action) {
 		// TODO Auto-generated method stub
 	}
-	
-	
+
 }

@@ -2,7 +2,9 @@ package acters;
 
 import actions.Action;
 
-public interface Acter {
+import java.io.Serializable;
+
+public interface Acter extends Serializable{
 	String getName();
 	
 	void setName(String name);
