@@ -2,6 +2,7 @@ package acters.hero;
 import java.lang.Math;
 
 import acters.enemy.Enemy;
+import actions.Action;
 
 public class Hero implements iHero {
 	private String name;
@@ -39,6 +40,7 @@ public class Hero implements iHero {
 	public int getHealthPoints() {
 		return healthPoints;
 	}
+
 	public void setHealthPoints(int healthPoints) {
 		this.healthPoints = healthPoints;
 	}
@@ -58,14 +60,15 @@ public class Hero implements iHero {
 	public void setDefence(int defence) {
 		this.defence = defence;
 	}
-	
-	public void attack(Enemy enemy) {
-		int damage = Math.max(0, this.attack- enemy.getDefence());
-		enemy.defend(damage);
-	}
+
 	
 	public void defend(int damage) {
 		this.setHealthPoints(getHealthPoints() - damage);
+	}
+
+	@Override
+	public void doAction(Action action) {
+		// TODO Auto-generated method stub
 	}
 	
 	

@@ -8,6 +8,5 @@ public interface iHero extends Acter {
 	public Role getRole();
 	
 	public void setRole(Role role);
-	
-	public void attack(Enemy enemy);
+
 }

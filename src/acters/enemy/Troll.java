@@ -1,6 +1,7 @@
 package acters.enemy;
 
 import acters.Acter;
+import actions.Action;
 
 public class Troll extends Enemy implements iTroll{
 
@@ -14,12 +15,12 @@ public class Troll extends Enemy implements iTroll{
 		if (this.getHealthPoints() > 5) damage *= 0.7;
 		this.setHealthPoints(getHealthPoints() - damage);
 	}
-	
-	
-	
-	public void attack(Acter acter) {
-		int damage = Math.max(0, this.getAttack() - acter.getDefence());
-		acter.defend(damage);
+
+
+	@Override
+	public void doAction(Action action) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

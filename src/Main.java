@@ -5,6 +5,8 @@ import acters.enemy.Animal;
 import acters.enemy.Troll;
 import acters.hero.Hero;
 import acters.hero.Role;
+import actions.Action;
+import actions.Attack;
 
 public class Main {
 
@@ -57,8 +59,8 @@ public class Main {
 				}
 				if (!animals.isEmpty() && h.getHealthPoints() < 5) {
 					Animal animal = animals.get(random.nextInt(animals.size()));
-					h.attack(animal);
-					System.out.println(h.getName() + " attacked " + animal.getName() + ".");
+					h.doAction(new Attack(h, animal));
+//					h.attack(animal);
 					if (animal.getHealthPoints()<=0) {
 						System.out.println(h.getName() + " replenished some health");
 						animals.remove(animal);
@@ -67,8 +69,8 @@ public class Main {
 				} else {
 					if (!trolls.isEmpty()) {
 						Troll troll = trolls.get(random.nextInt(trolls.size()));
-						h.attack(troll);
-						System.out.println(h.getName() + " attacked " + troll.getName() + ".");
+						Action.doAction(new Attack(h, troll));
+//						h.attack(troll);
 						if (troll.getHealthPoints()<=0) {
 							System.out.println(troll.getName() + " died.");
 							trolls.remove(troll);
@@ -85,8 +87,8 @@ public class Main {
 				}
 				if (!animals.isEmpty() && t.getHealthPoints() < 5) {
 					Animal animal = animals.get(random.nextInt(0, animals.size()));
-					t.attack(animal);
-					System.out.println(t.getName() + " attacked " + animal.getName() + ".");
+//					t.attack(animal);
+					Action.doAction(new Attack(t, animal));
 					if (animal.getHealthPoints()<=0) {
 						System.out.println(t.getName() + " replenished some health");
 						animals.remove(animal);
@@ -95,8 +97,8 @@ public class Main {
 				} else {
 					if (!trolls.isEmpty()) {
 						Hero hero = heroes.get(random.nextInt(0, heroes.size()));
-						t.attack(hero);
-						System.out.println(t.getName()+ " attacked " + hero.getName() + ".");
+//						t.attack(hero);
+						Action.doAction(new Attack(t, hero));
 						if (hero.getHealthPoints()<=0) {
 							System.out.println(hero.getName() + " died.");
 							heroes.remove(hero);

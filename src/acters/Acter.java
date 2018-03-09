@@ -1,13 +1,11 @@
 package acters;
 
+import actions.Action;
+
 public interface Acter {
 	String getName();
 	
 	void setName(String name);
-	
-	/*Role getRole();
-	
-	void setRole(Role role);*/
 	
 	int getHealthPoints();
 	
@@ -20,8 +18,8 @@ public interface Acter {
 	int getDefence();
 	
 	void setDefence(int defence);
-	
-//	void attack(Enemy enemy);
-	
+
+	void doAction(Action action);
+
 	void defend(int damage);
 }
