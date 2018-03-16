@@ -1,18 +1,21 @@
 package acters.enemy;
 
-public abstract class Enemy implements iEnemy {
+public abstract class Enemy implements IEnemy {
 	private String name;
 	private int healthPoints;
 	private int attack;
 	private int defence;
+	private int initiative;
 	private boolean is_aggressive;
 	
-	public Enemy(String name, int healthPoints, int attack, int defence, boolean is_aggressive) {
+	public Enemy(String name, int healthPoints, int attack, int defence,
+				 int initiative, boolean is_aggressive) {
 		super();
 		this.name = name;
 		this.healthPoints = healthPoints;
 		this.attack = attack;
 		this.defence = defence;
+		this.initiative = initiative;
 		this.is_aggressive = is_aggressive;
 	}
 
@@ -28,8 +31,12 @@ public abstract class Enemy implements iEnemy {
 		return healthPoints;
 	}
 
-	public void setHealthPoints(int healthPoints) {
-		this.healthPoints = healthPoints;
+    public void setHealthPoints(int healthPoints) {
+        this.healthPoints = healthPoints;
+    }
+
+    public void takeDamage(int damage) {
+		this.healthPoints -= damage;
 	}
 
 	public int getAttack() {
@@ -59,5 +66,9 @@ public abstract class Enemy implements iEnemy {
 	public void defend(int damage) {
 		healthPoints -= damage;
 	}
-	
+
+	public int getInitiative(){
+		return initiative;
+	}
+
 }

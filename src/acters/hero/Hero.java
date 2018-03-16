@@ -1,39 +1,37 @@
 package acters.hero;
-import java.lang.Math;
 
-import acters.enemy.Enemy;
 import actions.Action;
 
-public class Hero implements iHero{
+public class Hero implements IHero {
 	private String name;
-	private Role role;
+	private RoleClass role;
 	private int healthPoints;
 	private int attack;
 	private int defence;
+	private int initiative;
 	
-	public Hero(String name, Role role, int healthPoints, int attack, int defence) {
+	public Hero(String name, RoleClass role, int healthPoints, int attack, int defence,
+				int initiative) {
 		super();
 		this.name = name;
 		this.role = role;
 		this.healthPoints = healthPoints;
 		this.attack = attack;
 		this.defence = defence;
-		System.out.println(name + ", " + role.toString() + ", " + healthPoints + "hp, " + attack + "att, " + defence + "def.");
+		this.initiative = initiative;
+		System.out.println(name + ", " + role.toString() + ", " + healthPoints + "hp, "
+				+ attack + "att, " + defence + "def, " + initiative + "init.");
 	}
 	
 	public String getName() {
 		return name;
 	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Role getRole() {
+
+	public RoleClass getRoleClass() {
 		return role;
 	}
 	
-	public void setRole(Role role) {
+	public void setRoleClass(RoleClass role) {
 		this.role = role;
 	}
 	
@@ -41,34 +39,26 @@ public class Hero implements iHero{
 		return healthPoints;
 	}
 
-	public void setHealthPoints(int healthPoints) {
-		this.healthPoints = healthPoints;
+	public void takeDamage(int damage) {
+		healthPoints = getHealthPoints() - damage;
+	}
+
+	public void replenishHealth(){
+		this.healthPoints = getHealthPoints() + 3;
 	}
 	
 	public int getAttack() {
 		return attack;
 	}
-	
-	public void setAttack(int attack) {
-		this.attack = attack;
-	}
-	
+
 	public int getDefence() {
 		return defence;
 	}
-	
-	public void setDefence(int defence) {
-		this.defence = defence;
-	}
-
-	
-	public void defend(int damage) {
-		this.setHealthPoints(getHealthPoints() - damage);
-	}
 
 	@Override
-	public void doAction(Action action) {
-		// TODO Auto-generated method stub
+	public int getInitiative() {
+		return initiative;
 	}
+
 
 }

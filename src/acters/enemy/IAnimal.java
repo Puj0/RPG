@@ -1,6 +1,6 @@
 package acters.enemy;
 
-public interface iAnimal extends iEnemy {
+public interface IAnimal extends IEnemy {
 
 	void defend(int damage);
 	
