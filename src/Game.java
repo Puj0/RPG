@@ -4,6 +4,7 @@ import acters.enemy.Animal;
 import acters.enemy.Troll;
 import acters.hero.Hero;
 import actions.Attack;
+import actions.SkipRound;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,22 +34,31 @@ public class Game implements Serializable{
         battle();
     }
 
-    //TODO ovde ne valja što ne možeš ukloniti element iz liste kroz koju se iterira
     private static void battle() {
+
         Collection<Acter> list = acters.sortedActers.values();
         for (Acter acter : list) {
             if (!removedActers.contains(acter)) {
-                if (acter.getClass().equals(Hero.class)) {
-                    fight(acter, trolls);
-                }
-                if (acter.getClass().equals(Troll.class)) {
-                    fight(acter, heroes);
+                if (acterIsAttacking()) {
+                    if (acter.getClass().equals(Hero.class)) {
+                        fight(acter, trolls);
+                    }
+                    if (acter.getClass().equals(Troll.class)) {
+                        fight(acter, heroes);
+                    }
+                } else {
+                    new SkipRound(acter);
                 }
             }
         }
         for (Acter acter: removedActers) {
             acters.remove(acter);
         }
+    }
+
+    private static boolean acterIsAttacking(){
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        return (random.nextInt(0,4) > 1);
     }
 
     private static void fight(Acter attacker, ArrayList<? extends Acter> defenders){

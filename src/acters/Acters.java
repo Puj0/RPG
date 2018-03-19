@@ -26,7 +26,7 @@ public class Acters {
 
     public void createCharacters() {
 
-        int numOfHeroes = random.nextInt(4, 17);
+        int numOfHeroes = random.nextInt(4, 7);
         int numOfEnemies = random.nextInt(numOfHeroes, numOfHeroes*2);
 
         createHeroes(numOfHeroes);

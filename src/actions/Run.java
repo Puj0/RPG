@@ -1,10 +1,12 @@
 package actions;
 
+import acters.Acter;
+
 public class Run implements Action {
 
-	public void doAction() {
+	public void execute(Acter acter) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	
 }
