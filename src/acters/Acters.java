@@ -11,10 +11,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.*;
 
-//Klasa koja će napraviti sve aktere... Postavlja im inicijative,
-//sortira ih po njima, reguliše da li su živi ili ne. Možda još nešto bude dodato.
-//Mare će me koriti jer ovo nije po SOLID-u.
-
 public class Acters {
 
     public SortedSetMultimap<Integer,Acter> sortedActers;
@@ -31,6 +27,17 @@ public class Acters {
 
         createHeroes(numOfHeroes);
         createEnemies(numOfEnemies);
+        printCharacterInitiatives();
+    }
+
+    private void createHeroes(int numOfHeroes){
+        for(int i = 0; i < numOfHeroes; i++) {
+            Hero newHero = new Hero("Hero " + (i+1), RoleClass.values()[i%RoleClass.values().length],
+                    random.nextInt(10, 26), random.nextInt(3, 11),
+                    random.nextInt(2, 7), random.nextInt(1, 10));
+            int newInitiative = calculateInitiative(newHero.getInitiative());
+            this.sortedActers.put(newInitiative, newHero);
+        }
     }
 
     private void createEnemies(int numOfEnemies) {
@@ -41,7 +48,6 @@ public class Acters {
                         random.nextInt(3, 11), random.nextInt(2, 7),
                         random.nextInt(1, 10));
                 int newInitiative = calculateInitiative(newTroll.getInitiative());
-                System.out.println(newTroll.getName() + " has initiative: " + newInitiative);
                 this.sortedActers.put(newInitiative, newTroll);
             } else {
                 Animal newAnimal = new Animal("Animal " + (i+1), random.nextInt(5, 16),
@@ -53,19 +59,17 @@ public class Acters {
         }
     }
 
-    private void createHeroes(int numOfHeroes){
-        for(int i = 0; i < numOfHeroes; i++) {
-            Hero newHero = new Hero("Hero " + (i+1), RoleClass.values()[i%RoleClass.values().length],
-                    random.nextInt(10, 26), random.nextInt(3, 11),
-                    random.nextInt(2, 7), random.nextInt(1, 10));
-            int newInitiative = calculateInitiative(newHero.getInitiative());
-            System.out.println(newHero.getName() + " has initiative: " + newInitiative);
-            this.sortedActers.put(newInitiative, newHero);
-        }
-    }
-
     private int calculateInitiative(int initiative) {
         return initiative + random.nextInt(1, 20);
+    }
+
+    private void printCharacterInitiatives(){
+        Multimaps.asMap(sortedActers).forEach((key, valueCollection) ->
+        {
+            for (Acter acter: valueCollection) {
+                System.out.println(acter.getName() + " has initiative: " + key);
+            }
+        });
     }
 
     public List<? extends Acter> getHeroes(){
@@ -99,7 +103,7 @@ public class Acters {
         return (getHeroes().isEmpty() || getTrolls().isEmpty());
     }
 
-    public void remove(Acter acter) {
+    public void removeActer(Acter acter) {
         sortedActers.values().remove(acter);
     }
 }

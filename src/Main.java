@@ -1,9 +1,11 @@
+import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
 
-		int rounds = 15;
+		int rounds = readNumOfRounds();
+
 		int currentRound = 1;
 		Game initialGame = new Game();
 		while (!initialGame.gameDone() && !(currentRound > rounds)){
@@ -18,6 +20,11 @@ public class Main {
 		}
 	}
 
+	private static int readNumOfRounds() {
+		System.out.print("Enter how many rounds are going to be played: ");
+		Scanner in = new Scanner(System.in);
+		return in.nextInt();
+	}
 
 }
 

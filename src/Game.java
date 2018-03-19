@@ -4,6 +4,7 @@ import acters.enemy.Animal;
 import acters.enemy.Troll;
 import acters.hero.Hero;
 import actions.Attack;
+import actions.RunAway;
 import actions.SkipRound;
 
 import java.io.Serializable;
@@ -21,6 +22,10 @@ public class Game implements Serializable{
 
     Game(){
         acters.createCharacters();
+        updateActorLists();
+    }
+
+    public void updateActorLists(){
         trolls = (ArrayList<Troll>) acters.getTrolls();
         animals = (ArrayList<Animal>) acters.getAnimals();
         heroes = (ArrayList<Hero>) acters.getHeroes();
@@ -32,6 +37,8 @@ public class Game implements Serializable{
 
     public void runRound(){
         battle();
+        retreat();
+        cleanUpBattlefield();
     }
 
     private static void battle() {
@@ -51,8 +58,22 @@ public class Game implements Serializable{
                 }
             }
         }
-        for (Acter acter: removedActers) {
-            acters.remove(acter);
+    }
+
+    private void cleanUpBattlefield() {
+        for (Acter acter : removedActers) {
+            acters.removeActer(acter);
+        }
+        updateActorLists();
+    }
+
+    private void retreat() {
+        Collection<Acter> list = acters.sortedActers.values();
+        for (Acter acter : list){
+            if (acter.getHealthPoints() < 2 && !removedActers.contains(acter)){
+                new RunAway(acter);
+                removedActers.add(acter);
+            }
         }
     }
 
@@ -85,7 +106,7 @@ public class Game implements Serializable{
         }
     }
 
-    public static void outcome() {
+    public void outcome() {
         if (heroes.isEmpty()) {
             System.out.println("Heroes lost!");
         } else {
