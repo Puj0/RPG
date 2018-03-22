@@ -1,23 +1,23 @@
+import acters.Acter;
+import acters.ActersRepository;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
 
-		int rounds = readNumOfRounds();
+		ActersRepository acters = new ActersRepository();
+		List<Acter> heroes = acters.getHeroes();
+		List<Acter> trolls = acters.getTrolls();
 
-		int currentRound = 1;
-		Game initialGame = new Game();
-		while (!initialGame.gameDone() && !(currentRound > rounds)){
-			initialGame.runRound();
-			currentRound++;
-		}
-		if ((currentRound != (rounds + 1))){
-			initialGame.outcome();
-			System.out.println("It took " + (currentRound-1) + " rounds.");
-		} else {
-			System.out.println("Time's up!");
-		}
+		int rounds = readNumOfRounds();
+		Game gb = new Game.GameBuilder(rounds)
+				.addRace(heroes)
+				.addRace(trolls)
+				.build();
+		gb.runGame();
 	}
 
 	private static int readNumOfRounds() {

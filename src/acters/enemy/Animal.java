@@ -16,6 +16,5 @@ public class Animal extends Enemy implements IAnimal {
 
 	@Override
 	public void replenishHealth() {
-		return;
 	}
 }

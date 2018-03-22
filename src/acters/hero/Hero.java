@@ -1,7 +1,5 @@
 package acters.hero;
 
-import actions.Action;
-
 public class Hero implements IHero {
 	private String name;
 	private RoleClass role;

@@ -8,7 +8,7 @@ public class SkipRound implements Action {
         execute(acter);
     }
 
-    public void execute(Acter acter) {
+    private void execute(Acter acter) {
         System.out.println(acter.getName() + " decided to skip round.");
     }
 }

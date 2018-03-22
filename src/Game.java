@@ -1,61 +1,60 @@
 import acters.Acter;
-import acters.Acters;
-import acters.enemy.Animal;
-import acters.enemy.Troll;
-import acters.hero.Hero;
+import acters.ActersRepository;
+import acters.ActerWithInitiative;
 import actions.Attack;
 import actions.RunAway;
-import actions.SkipRound;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class Game implements Serializable{
 
-    private static Acters acters = new Acters();
-    private static ArrayList<Acter> removedActers = new ArrayList<>();
-    private static ArrayList<Troll> trolls;
-    private static ArrayList<Animal> animals;
-    private static ArrayList<Hero> heroes;
+    private ThreadLocalRandom random = ThreadLocalRandom.current();
+    private ActersRepository acters;
+    private ArrayList<Acter> removedActers = new ArrayList<>();
+    private int currentRound;
+    private int totalRounds;
 
-    Game(){
-        acters.createCharacters();
-        updateActorLists();
+    private Game(GameBuilder builder){
+        this.acters = builder.acters;
+        totalRounds = builder.totalRounds;
     }
 
-    public void updateActorLists(){
-        trolls = (ArrayList<Troll>) acters.getTrolls();
-        animals = (ArrayList<Animal>) acters.getAnimals();
-        heroes = (ArrayList<Hero>) acters.getHeroes();
+    public void runGame(){
+        acters.printCharacterInitiatives();
+        runUntilDone(totalRounds);
     }
 
-    public boolean gameDone() {
-        return acters.gameDone();
+    private void runUntilDone(int rounds) {
+        for(currentRound = 0; currentRound < rounds; currentRound++){
+            if (acters.gameDone()){
+                outcome();
+                System.out.println("It took " + (currentRound) + " rounds.");
+                return;
+            }
+            runRound();
+        }
+        if (acters.gameDone()) {
+            outcome();
+            System.out.println("It took " + (currentRound - 1) + " rounds.");
+        } else {
+            System.out.println("Time's up!");
+        }
     }
 
-    public void runRound(){
+    private void runRound(){
         battle();
         retreat();
         cleanUpBattlefield();
+        stateAtTheEndOfTheRound();
     }
 
-    private static void battle() {
-
-        Collection<Acter> list = acters.sortedActers.values();
-        for (Acter acter : list) {
-            if (!removedActers.contains(acter)) {
-                if (acterIsAttacking()) {
-                    if (acter.getClass().equals(Hero.class)) {
-                        fight(acter, trolls);
-                    }
-                    if (acter.getClass().equals(Troll.class)) {
-                        fight(acter, heroes);
-                    }
-                } else {
-                    new SkipRound(acter);
-                }
+    private void battle() {
+        for (ActerWithInitiative acter : acters.getSortedActers()) {
+            if (!removedActers.contains(acter.getActer())){
+                fight(acter.getActer());
             }
         }
     }
@@ -64,50 +63,57 @@ public class Game implements Serializable{
         for (Acter acter : removedActers) {
             acters.removeActer(acter);
         }
-        updateActorLists();
     }
 
     private void retreat() {
-        Collection<Acter> list = acters.sortedActers.values();
-        for (Acter acter : list){
-            if (acter.getHealthPoints() < 2 && !removedActers.contains(acter)){
-                new RunAway(acter);
-                removedActers.add(acter);
+        for (ActerWithInitiative acter : acters.getSortedActers()) {
+            if (acter.getActer().getHealthPoints() < 2 && !removedActers.contains(acter.getActer())){
+                new RunAway(acter.getActer());
+                removedActers.add(acter.getActer());
             }
         }
     }
 
-    private static boolean acterIsAttacking(){
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        return (random.nextInt(0,4) > 1);
+    private boolean acterIsAttacking(){
+        return (random.nextInt(0,4) > 0);
     }
 
-    private static void fight(Acter attacker, ArrayList<? extends Acter> defenders){
-        ThreadLocalRandom random = ThreadLocalRandom.current();
+    private void fight(Acter attacker){
 
-        if (!animals.isEmpty() && attacker.getHealthPoints() < 5){
-            Animal animal = animals.get(random.nextInt(0, animals.size()));
-            new Attack(attacker, animal);
-            if (animal.getHealthPoints()<=0) {
-                System.out.println(attacker.getName() + " replenished some health");
-                removedActers.add(animal);
-                attacker.replenishHealth();
-            }
-        } else {
+        if (acterIsAttacking()) {
+            List<Acter> defenders = createListOfDefenders(attacker);
+
             if (!defenders.isEmpty()) {
                 Acter defender = defenders.get(random.nextInt(0, defenders.size()));
                 new Attack(attacker, defender);
-                if (defender.getHealthPoints()<=0) {
-                    System.out.println(defender.getName() + " died.");
+                if (defender.getHealthPoints() <= 0) {
                     removedActers.add(defender);
-                    defenders.remove(defender);
+                    System.out.println(defender.getName() + " has died.");
                 }
+            } else {
+                System.out.println(attacker.getName() + " had no one to attack.");
             }
+        } else {
+            System.out.println(attacker.getName() + " has decided to skip this round.");
         }
     }
 
-    public void outcome() {
-        if (heroes.isEmpty()) {
+    private List<Acter> createListOfDefenders(Acter attacker) {
+        return acters.getSortedActers().stream()
+                .map(ActerWithInitiative::getActer)
+                .filter(a -> !(a.getClass().equals(attacker.getClass())))
+                .filter(a -> !(removedActers.contains(a)))
+                .collect(Collectors.toList());
+    }
+
+    private void stateAtTheEndOfTheRound(){
+        System.out.println("End of round " + (currentRound + 1) + ". \n" +
+                "Heroes - Trolls - Animals \n" +
+                acters.getHeroes().size() + "\t\t" + acters.getTrolls().size() + "\t\t" + acters.getAnimals().size());
+    }
+
+    private void outcome() {
+        if (acters.getHeroes().isEmpty()) {
             System.out.println("Heroes lost!");
         } else {
             System.out.println("Heroes were victorious");
@@ -117,5 +123,25 @@ public class Game implements Serializable{
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    public static class GameBuilder {
+        private ActersRepository acters = new ActersRepository(0);
+        private int totalRounds;
+
+        GameBuilder(int rounds){
+            this.totalRounds = rounds;
+        }
+
+        public GameBuilder addRace(List<Acter> acters){
+            for (Acter acter: acters) {
+                this.acters.addActerToSortedActers(acter);
+            }
+            return this;
+        }
+
+        public Game build() {
+            return new Game(this);
+        }
     }
 }
