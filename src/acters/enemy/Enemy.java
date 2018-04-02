@@ -8,7 +8,7 @@ public abstract class Enemy implements IEnemy {
 	private int initiative;
 	private boolean is_aggressive;
 	
-	public Enemy(String name, int healthPoints, int attack, int defence,
+	Enemy(String name, int healthPoints, int attack, int defence,
 				 int initiative, boolean is_aggressive) {
 		super();
 		this.name = name;

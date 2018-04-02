@@ -1,14 +1,16 @@
-package actions;
+package commands;
 
 import acters.Acter;
 
-public class SkipRound implements Action {
+public class SkipRound implements Command {
+
+    private Acter acter;
 
     public SkipRound(Acter acter){
-        execute(acter);
+        this.acter = acter;
     }
 
-    private void execute(Acter acter) {
+    public void execute() {
         System.out.println(acter.getName() + " decided to skip round.");
     }
 }

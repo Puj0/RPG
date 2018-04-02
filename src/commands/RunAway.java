@@ -1,14 +1,16 @@
-package actions;
+package commands;
 
 import acters.Acter;
 
-public class RunAway implements Action {
+public class RunAway implements Command {
+
+    private Acter acter;
 
     public RunAway(Acter acter){
-        execute(acter);
+        this.acter = acter;
     }
 
-	private void execute(Acter acter) {
+	public void execute() {
         System.out.println(acter.getName() + " has left the battle. Such a coward.");
 	}
 	
