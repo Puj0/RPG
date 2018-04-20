@@ -5,10 +5,7 @@ import acters.SortedActersList;
 import acters.enemy.Animal;
 import acters.enemy.Troll;
 import acters.hero.Hero;
-import commands.Attack;
-import commands.Command;
-import commands.Dispatcher;
-import commands.RunAway;
+import commands.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -22,7 +19,8 @@ public class Game implements Serializable {
     private ArrayList<Acter> removedActers = new ArrayList<>();
     private int currentRound;
     private int totalRounds;
-    Dispatcher dispatcher = new Dispatcher();
+    private CommandDispatcher dispatcher = new CommandDispatcher();
+    private CommandFactory commandFactory = new CommandFactory();
 
     private Game(GameBuilder builder) {
         this.acters = builder.acters;
@@ -56,8 +54,22 @@ public class Game implements Serializable {
         }
     }
 
-    public boolean gameDone() {
-        return (getRace(Hero.class).isEmpty() || getRace(Troll.class).isEmpty());
+    private boolean gameDone() {
+        return Arrays.stream(acters.getArray())
+                .filter(acterWithInitiative -> acterWithInitiative.getActer().isMain())
+                .map(a -> a.getActer().getClass())
+                .distinct()
+                .count() < 2;
+    }
+
+    public List<Acter> getRace(Class<? extends Acter> acterClass) {
+        List<Acter> race = new ArrayList<>();
+        for (ActerWithInitiative acterWithInitiative : acters.getArray()){
+            if (acterClass.isInstance(acterWithInitiative.getActer())){
+                race.add(acterWithInitiative.getActer());
+            }
+        }
+        return race;
     }
 
     private void runRound() {
@@ -75,31 +87,11 @@ public class Game implements Serializable {
         }
     }
 
-    private void cleanUpBattlefield() {
-        for (Acter acter : removedActers) {
-            acters.remove(acter);
-        }
-    }
-
-    private void retreat() {
-        for (ActerWithInitiative acter : acters.getArray()) {
-            if (acter.getActer().getHealthPoints() < 2 && !removedActers.contains(acter.getActer())) {
-                Command runAway = new RunAway(acter.getActer());
-                dispatcher.setCommand(runAway);
-                dispatcher.execute();
-                removedActers.add(acter.getActer());
-            }
-        }
-    }
-
-    private boolean isActerAttacking() {
-        return (random.nextInt(0, 4) > 0);
-    }
-
     private void fight(Acter attacker) {
 
         if (!isActerAttacking()) {
-            System.out.println(attacker.getName() + " has decided to skip this round.");
+            Command skipRound = commandFactory.createSkipRound(attacker);
+            dispatcher.setCommand(skipRound);
             return;
         }
 
@@ -113,11 +105,21 @@ public class Game implements Serializable {
         attack(attacker, defenders);
     }
 
+    private boolean isActerAttacking() {
+        return (random.nextInt(0, 4) > 0);
+    }
+
+    private List<Acter> createListOfDefenders(Acter attacker) {
+        return Arrays.stream(acters.getArray())
+                .map(ActerWithInitiative::getActer)
+                .filter(a -> !(a.getClass() == attacker.getClass()) && !(removedActers.contains(a)))
+                .collect(Collectors.toList());
+    }
+
     private void attack(Acter attacker, List<Acter> defenders) {
         Acter defender = defenders.get(random.nextInt(0, defenders.size()));
-        Attack attack = new Attack(attacker, defender);
+        Command attack = commandFactory.createAttack(attacker, defender);
         dispatcher.setCommand(attack);
-        dispatcher.execute();
 
         if (defender.getHealthPoints() <= 0) {
             killDefender(defender);
@@ -129,27 +131,26 @@ public class Game implements Serializable {
         System.out.println(defender.getName() + " has died.");
     }
 
-    private List<Acter> createListOfDefenders(Acter attacker) {
-        return Arrays.stream(acters.getArray())
-                .map(ActerWithInitiative::getActer)
-                .filter(a -> !(a.getClass() == attacker.getClass()) && !(removedActers.contains(a)))
-                .collect(Collectors.toList());
+    private void retreat() {
+        for (ActerWithInitiative acter : acters.getArray()) {
+            if (acter.getActer().getHealthPoints() < 2 && !removedActers.contains(acter.getActer())) {
+                Command runAway = commandFactory.createRunAway(acter.getActer());
+                dispatcher.setCommand(runAway);
+                removedActers.add(acter.getActer());
+            }
+        }
+    }
+
+    private void cleanUpBattlefield() {
+        for (Acter acter : removedActers) {
+            acters.remove(acter);
+        }
     }
 
     private void stateAtTheEndOfTheRound() {
         System.out.println("End of round " + (currentRound + 1) + ". \n" +
                 "Heroes - Trolls - Animals \n" +
                 getRace(Hero.class).size() + "\t\t" + getRace(Troll.class).size() + "\t\t" + getRace(Animal.class).size());
-    }
-
-    private List<Acter> getRace(Class<? extends Acter> acterClass) {
-        List<Acter> race = new ArrayList<>();
-        for (ActerWithInitiative acterWithInitiative : acters.getArray()){
-            if (acterClass.isInstance(acterWithInitiative.getActer())){
-                race.add(acterWithInitiative.getActer());
-            }
-        }
-        return race;
     }
 
     private void outcome() {
@@ -176,14 +177,14 @@ public class Game implements Serializable {
 
         public GameBuilder addRace(List<Acter> acters) {
             for (Acter acter : acters) {
-                this.acters.add(new ActerWithInitiative(acter));
+                this.acters.addActer(new ActerWithInitiative(acter));
             }
             return this;
         }
 
         public GameBuilder addActers(ActersRepository actersRepository){
             for (ActerWithInitiative acter : actersRepository.getSortedActers().getArray()){
-                acters.add(acter);
+                acters.addActer(acter);
             }
             return this;
         }

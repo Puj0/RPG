@@ -12,41 +12,53 @@ public class SortedActersList {
         array = new ActerWithInitiative[]{};
     }
 
-    public SortedActersList(ActerWithInitiative[] array) {
-        this.array = array;
-    }
-
     public ActerWithInitiative[] getArray() {
         return Arrays.copyOfRange(array, 0, size);
     }
 
-    public void add(ActerWithInitiative t) {
+    public void addActer(ActerWithInitiative acter) {
         if (size == size()){
-            ensureCapacity();
+            expandCapacity();
         }
-        array[size++] = t;
-        for(int i = size - 1; i > 0; i--){
-            if(array[i].getInitiative() > array[i-1].getInitiative()){
-                ActerWithInitiative temp = array[i-1];
-                array[i-1] = array[i];
-                array[i] = temp;
+
+        size++;
+        int index = size - 1;
+
+        while(index > 0){
+            if (array[index-1].getInitiative() > acter.getInitiative()){
+                insertNewElement(index, acter);
+                break;
             }
+
+            if(array[index-1].getInitiative() < acter.getInitiative()){
+                index--;
+                continue;
+            }
+
+            if (array[index-1].getActer().getInitiative() >= acter.getActer().getInitiative()){
+                insertNewElement(index,acter);
+                break;
+            }
+
+            index--;
+        }
+
+        if (index == 0){
+            insertNewElement(0,acter);
         }
     }
 
-    private void ensureCapacity() {
+    private void insertNewElement(int index, ActerWithInitiative acter) {
+        System.arraycopy(array, index, array, index+1, size-index-1);
+        array[index] = acter;
+    }
+
+    private void expandCapacity() {
         int newSize = size() * 2 + 1;
         array = Arrays.copyOf(array, newSize);
     }
 
-    public ActerWithInitiative get(int index) {
-        if (index > size || index < 0){
-            throw new IndexOutOfBoundsException("Index " + index + ", Size " + index);
-        }
-        return array[index];
-    }
-
-    public int size() {
+    private int size() {
         return array.length;
     }
 

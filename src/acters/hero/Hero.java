@@ -58,5 +58,8 @@ public class Hero implements IHero {
 		return initiative;
 	}
 
-
+	@Override
+	public boolean isMain() {
+		return true;
+	}
 }

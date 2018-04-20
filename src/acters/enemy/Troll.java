@@ -20,4 +20,8 @@ public class Troll extends Enemy implements ITroll {
     }
 
 
+	@Override
+	public boolean isMain() {
+		return true;
+	}
 }

@@ -37,6 +37,9 @@ public abstract class Enemy implements IEnemy {
 
     public void takeDamage(int damage) {
 		this.healthPoints -= damage;
+		if(!is_aggressive){
+			setIs_aggressive(true);
+		}
 	}
 
 	public int getAttack() {

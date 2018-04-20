@@ -1,6 +1,7 @@
 package commands;
 
 import acters.Acter;
+import acters.enemy.Enemy;
 
 public class Attack implements Command {
 	private Acter attacker;
@@ -12,10 +13,17 @@ public class Attack implements Command {
 	}
 
 	public void execute() {
-		int damage = Math.max(0, attacker.getAttack() - defender.getDefence());
-		defender.takeDamage(damage);
-		System.out.println(attacker.getName() + " attacked " + defender.getName() + ".");
-		System.out.println(defender.getName() + " now has " + defender.getHealthPoints() + "hp.");
+	    if (attacker instanceof Enemy){
+	        if(((Enemy) attacker).isIs_aggressive()){
+                int damage = Math.max(0, attacker.getAttack() - defender.getDefence());
+                defender.takeDamage(damage);
+                System.out.println(attacker.getName() + " attacked " + defender.getName() + ".");
+            }
+        } else {
+            int damage = Math.max(0, attacker.getAttack() - defender.getDefence());
+            defender.takeDamage(damage);
+            System.out.println(attacker.getName() + " attacked " + defender.getName() + ".");
+        }
 	}
 
 }

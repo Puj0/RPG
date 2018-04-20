@@ -1,11 +1,12 @@
 package commands;
 
-public class Dispatcher {
+public class CommandDispatcher {
 
     private Command command;
 
     public void setCommand(Command command) {
         this.command = command;
+        execute();
     }
 
     public void execute(){

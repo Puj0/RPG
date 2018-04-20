@@ -12,9 +12,15 @@ public class Animal extends Enemy implements IAnimal {
 		if (this.getHealthPoints() < 10) damage *= 1.15;
 		else if (this.getHealthPoints() > 25) damage *= 0.8;
 		this.takeDamage(getHealthPoints() - damage);
+		setIs_aggressive(true);
 	}
 
 	@Override
 	public void replenishHealth() {
+	}
+
+	@Override
+	public boolean isMain() {
+		return false;
 	}
 }

@@ -7,7 +7,6 @@ import acters.hero.RoleClass;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-
 public class ActersRepository {
 
     private SortedActersList sortedActers;
@@ -19,7 +18,7 @@ public class ActersRepository {
 
     public void createCharacters() {
 
-        int numOfHeroes = random.nextInt(4, 7);
+        int numOfHeroes = random.nextInt(124, 127);
         int numOfEnemies = random.nextInt(numOfHeroes, numOfHeroes * 2);
 
         createHeroes(numOfHeroes);
@@ -52,13 +51,8 @@ public class ActersRepository {
         }
     }
 
-    public void addActerToSortedActers(Acter acter) {
-        sortedActers.add(new ActerWithInitiative(acter));
-    }
-
-
-    public void removeActer(Acter acter) {
-        sortedActers.remove(acter);
+    private void addActerToSortedActers(Acter acter) {
+        sortedActers.addActer(new ActerWithInitiative(acter));
     }
 
     public SortedActersList getSortedActers() {

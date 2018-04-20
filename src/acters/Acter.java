@@ -18,4 +18,6 @@ public interface Acter extends Serializable{
 
 	int getInitiative();
 
+	boolean isMain();
+
 }
