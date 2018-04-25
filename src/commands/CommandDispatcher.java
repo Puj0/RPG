@@ -1,5 +1,8 @@
 package commands;
 
+import commands.concrete_commands.Command;
+
+
 public class CommandDispatcher {
 
     private Command command;

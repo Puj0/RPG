@@ -1,3 +1,5 @@
+package game;
+
 import acters.Acter;
 import acters.ActerWithInitiative;
 import acters.ActersRepository;
@@ -6,6 +8,7 @@ import acters.enemy.Animal;
 import acters.enemy.Troll;
 import acters.hero.Hero;
 import commands.*;
+import commands.concrete_commands.Command;
 
 import java.io.Serializable;
 import java.util.*;
@@ -19,12 +22,16 @@ public class Game implements Serializable {
     private ArrayList<Acter> removedActers = new ArrayList<>();
     private int currentRound;
     private int totalRounds;
-    private CommandDispatcher dispatcher = new CommandDispatcher();
-    private CommandFactory commandFactory = new CommandFactory();
 
+
+
+    private CommandAbstractFactory commandFactory = new CommandFactory();
+private CommandDispatcher dispatcher;
     private Game(GameBuilder builder) {
         this.acters = builder.acters;
         totalRounds = builder.totalRounds;
+        dispatcher= builder.commandDispatcher;
+
     }
 
     public void runGame() {
@@ -64,8 +71,8 @@ public class Game implements Serializable {
 
     public List<Acter> getRace(Class<? extends Acter> acterClass) {
         List<Acter> race = new ArrayList<>();
-        for (ActerWithInitiative acterWithInitiative : acters.getArray()){
-            if (acterClass.isInstance(acterWithInitiative.getActer())){
+        for (ActerWithInitiative acterWithInitiative : acters.getArray()) {
+            if (acterClass.isInstance(acterWithInitiative.getActer())) {
                 race.add(acterWithInitiative.getActer());
             }
         }
@@ -169,8 +176,9 @@ public class Game implements Serializable {
     public static class GameBuilder {
         private SortedActersList acters;
         private int totalRounds;
+        private CommandDispatcher commandDispatcher;
 
-        GameBuilder(int rounds) {
+        public GameBuilder(int rounds) {
             this.totalRounds = rounds;
             acters = new SortedActersList();
         }
@@ -182,8 +190,8 @@ public class Game implements Serializable {
             return this;
         }
 
-        public GameBuilder addActers(ActersRepository actersRepository){
-            for (ActerWithInitiative acter : actersRepository.getSortedActers().getArray()){
+        public GameBuilder addActers(ActersRepository actersRepository) {
+            for (ActerWithInitiative acter : actersRepository.getSortedActers().getArray()) {
                 acters.addActer(acter);
             }
             return this;
@@ -191,6 +199,12 @@ public class Game implements Serializable {
 
         public Game build() {
             return new Game(this);
+        }
+
+        public GameBuilder addCommandDispatcher(CommandDispatcher commandDispatcher) {
+            this.commandDispatcher = commandDispatcher;
+
+            return this;
         }
     }
 }

@@ -1,4 +1,4 @@
-package commands;
+package commands.concrete_commands;
 
 import acters.Acter;
 import acters.enemy.Enemy;
@@ -6,6 +6,7 @@ import acters.enemy.Enemy;
 public class Attack implements Command {
 	private Acter attacker;
 	private Acter defender;
+
 
 	public Attack(Acter attacker, Acter defender) {
 		this.attacker = attacker;

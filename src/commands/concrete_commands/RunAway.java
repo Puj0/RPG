@@ -1,4 +1,4 @@
-package commands;
+package commands.concrete_commands;
 
 import acters.Acter;
 

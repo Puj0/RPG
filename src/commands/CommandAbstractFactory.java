@@ -1,6 +1,9 @@
 package commands;
 
 import acters.Acter;
+import commands.concrete_commands.Attack;
+import commands.concrete_commands.RunAway;
+import commands.concrete_commands.SkipRound;
 
 public interface CommandAbstractFactory {
 

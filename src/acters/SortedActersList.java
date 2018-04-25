@@ -1,5 +1,6 @@
 package acters;
 
+import javax.inject.Inject;
 import java.util.*;
 
 public class SortedActersList {
@@ -8,6 +9,7 @@ public class SortedActersList {
 
     private ActerWithInitiative[] array;
 
+    @Inject
     public SortedActersList() {
         array = new ActerWithInitiative[]{};
     }

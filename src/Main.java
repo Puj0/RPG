@@ -1,24 +1,24 @@
 
-import acters.ActersRepository;
-
+import DI.DaggerGameComponent;
+import DI.GameModule;
+import game.GameSession;
 import java.util.Scanner;
 
 public class Main {
 
+
 	public static void main(String[] args) {
 
-		ActersRepository acters = new ActersRepository();
-		acters.createCharacters();
+        int rounds = readNumOfRounds();
+		GameSession gameSession = new GameSession();
 
-		int rounds = readNumOfRounds();
-		Game gb = new Game.GameBuilder(rounds)
-			.addActers(acters)
-			.build();
-		gb.runGame();
+        DaggerGameComponent.builder().gameModule(new GameModule(rounds)).build().inject(gameSession);
+
+        gameSession.start();
 	}
 
 	private static int readNumOfRounds() {
-		System.out.print("Enter how many rounds are going to be played: ");
+		System.out.println("Enter how many rounds are going to be played: ");
 		Scanner in = new Scanner(System.in);
 		return in.nextInt();
 	}
