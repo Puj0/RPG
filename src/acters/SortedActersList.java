@@ -2,8 +2,9 @@ package acters;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Stream;
 
-public class SortedActersList {
+public class SortedActersList{
 
     private int size = 0;
 
@@ -76,5 +77,9 @@ public class SortedActersList {
     private void remove(int index) {
         System.arraycopy(array, index + 1, array, index, size - index);
         size--;
+    }
+
+    public Stream<ActerWithInitiative> stream(){
+        return Arrays.stream(getArray());
     }
 }

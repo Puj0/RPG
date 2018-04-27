@@ -23,15 +23,12 @@ public class Game implements Serializable {
     private int currentRound;
     private int totalRounds;
 
-
-
     private CommandAbstractFactory commandFactory = new CommandFactory();
-private CommandDispatcher dispatcher;
+    private CommandDispatcher dispatcher;
     private Game(GameBuilder builder) {
         this.acters = builder.acters;
         totalRounds = builder.totalRounds;
         dispatcher= builder.commandDispatcher;
-
     }
 
     public void runGame() {
@@ -69,14 +66,12 @@ private CommandDispatcher dispatcher;
                 .count() < 2;
     }
 
-    public List<Acter> getRace(Class<? extends Acter> acterClass) {
-        List<Acter> race = new ArrayList<>();
-        for (ActerWithInitiative acterWithInitiative : acters.getArray()) {
-            if (acterClass.isInstance(acterWithInitiative.getActer())) {
-                race.add(acterWithInitiative.getActer());
-            }
-        }
-        return race;
+    public int getRaceSize(Class<? extends Acter> acterClass) {
+        int size = (int) acters.stream()
+                .map(ActerWithInitiative::getActer)
+                .filter(acterClass::isInstance)
+                .count();
+        return size;
     }
 
     private void runRound() {
@@ -87,11 +82,10 @@ private CommandDispatcher dispatcher;
     }
 
     private void battle() {
-        for (ActerWithInitiative acter : acters.getArray()) {
-            if (!removedActers.contains(acter.getActer())) {
-                fight(acter.getActer());
-            }
-        }
+        acters.stream()
+                .map(ActerWithInitiative::getActer)
+                .filter(acter -> !removedActers.contains(acter))
+                .forEach(this::fight);
     }
 
     private void fight(Acter attacker) {
@@ -117,7 +111,7 @@ private CommandDispatcher dispatcher;
     }
 
     private List<Acter> createListOfDefenders(Acter attacker) {
-        return Arrays.stream(acters.getArray())
+        return acters.stream()
                 .map(ActerWithInitiative::getActer)
                 .filter(a -> !(a.getClass() == attacker.getClass()) && !(removedActers.contains(a)))
                 .collect(Collectors.toList());
@@ -139,29 +133,28 @@ private CommandDispatcher dispatcher;
     }
 
     private void retreat() {
-        for (ActerWithInitiative acter : acters.getArray()) {
-            if (acter.getActer().getHealthPoints() < 2 && !removedActers.contains(acter.getActer())) {
-                Command runAway = commandFactory.createRunAway(acter.getActer());
-                dispatcher.setCommand(runAway);
-                removedActers.add(acter.getActer());
-            }
-        }
+        acters.stream()
+                .map(ActerWithInitiative::getActer)
+                .filter(acter -> acter.getHealthPoints() < 2 && !removedActers.contains(acter))
+                .forEach(acter -> {
+                    Command runAway = commandFactory.createRunAway(acter);
+                    dispatcher.setCommand(runAway);
+                    removedActers.add(acter);
+                });
     }
 
     private void cleanUpBattlefield() {
-        for (Acter acter : removedActers) {
-            acters.remove(acter);
-        }
+        removedActers.forEach(acters::remove);
     }
 
     private void stateAtTheEndOfTheRound() {
         System.out.println("End of round " + (currentRound + 1) + ". \n" +
                 "Heroes - Trolls - Animals \n" +
-                getRace(Hero.class).size() + "\t\t" + getRace(Troll.class).size() + "\t\t" + getRace(Animal.class).size());
+                getRaceSize(Hero.class) + "\t\t" + getRaceSize(Troll.class) + "\t\t" + getRaceSize(Animal.class));
     }
 
     private void outcome() {
-        if (getRace(Hero.class).isEmpty()) {
+        if (getRaceSize(Hero.class) == 0) {
             System.out.println("Heroes lost!");
         } else {
             System.out.println("Heroes were victorious");
