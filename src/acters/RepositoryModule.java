@@ -1,6 +1,5 @@
-package DI;
+package acters;
 
-import acters.ActersRepository;
 import dagger.Module;
 import dagger.Provides;
 

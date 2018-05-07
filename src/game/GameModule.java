@@ -1,8 +1,7 @@
-package DI;
+package game;
 
 import acters.ActersRepository;
 import commands.CommandDispatcher;
-import game.Game;
 import dagger.Module;
 import dagger.Provides;
 
@@ -17,12 +16,11 @@ public class GameModule {
     }
     @Singleton
     @Provides
-    Game provideGame( ActersRepository actersRepository){
+    Game provideGame(ActersRepository actersRepository){
      return new Game.GameBuilder(rounds)
              .addActers(actersRepository)
              .addCommandDispatcher(new CommandDispatcher())
              .build();
     }
-//
 
 }

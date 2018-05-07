@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class ActersRepository {
+public class ActersRepository implements IActersRepository {
 
     private SortedActersList sortedActers;
     private ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -20,6 +20,7 @@ public class ActersRepository {
         createCharacters();
     }
 
+    @Override
     public void createCharacters() {
 
         int numOfHeroes = random.nextInt(124, 127);

@@ -196,7 +196,6 @@ public class Game implements Serializable {
 
         public GameBuilder addCommandDispatcher(CommandDispatcher commandDispatcher) {
             this.commandDispatcher = commandDispatcher;
-
             return this;
         }
     }

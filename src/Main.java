@@ -1,7 +1,9 @@
 
-import DI.DaggerGameComponent;
-import DI.GameModule;
-import game.GameSession;
+import game.DaggerGameComponent;
+import game.GameComponent;
+import game.GameModule;
+import game.Game;
+
 import java.util.Scanner;
 
 public class Main {
@@ -10,11 +12,11 @@ public class Main {
 	public static void main(String[] args) {
 
         int rounds = readNumOfRounds();
-		GameSession gameSession = new GameSession();
-
-        DaggerGameComponent.builder().gameModule(new GameModule(rounds)).build().inject(gameSession);
-
-        gameSession.start();
+        GameComponent gameComponent = DaggerGameComponent.builder()
+				.gameModule(new GameModule(rounds))
+				.build();
+        Game game = gameComponent.inject();
+        game.runGame();
 	}
 
 	private static int readNumOfRounds() {
