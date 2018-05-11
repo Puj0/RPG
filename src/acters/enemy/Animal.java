@@ -8,11 +8,12 @@ public class Animal extends Enemy implements IAnimal {
 				+ defence + "def, " + initiative + "init.");
 	}
 
+	@Override
 	public void defend(int damage) {
 		if (this.getHealthPoints() < 10) damage *= 1.15;
 		else if (this.getHealthPoints() > 25) damage *= 0.8;
-		this.takeDamage(getHealthPoints() - damage);
-		setIs_aggressive(true);
+		this.takeDamage(damage);
+		setAggressive(true);
 	}
 
 	@Override

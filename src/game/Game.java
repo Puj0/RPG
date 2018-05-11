@@ -2,7 +2,7 @@ package game;
 
 import acters.Acter;
 import acters.ActerWithInitiative;
-import acters.ActersRepository;
+import acters.IActersRepository;
 import acters.SortedActersList;
 import acters.enemy.Animal;
 import acters.enemy.Troll;
@@ -25,6 +25,7 @@ public class Game implements Serializable {
 
     private CommandAbstractFactory commandFactory = new CommandFactory();
     private CommandDispatcher dispatcher;
+
     private Game(GameBuilder builder) {
         this.acters = builder.acters;
         totalRounds = builder.totalRounds;
@@ -183,7 +184,7 @@ public class Game implements Serializable {
             return this;
         }
 
-        public GameBuilder addActers(ActersRepository actersRepository) {
+        public GameBuilder addActers(IActersRepository actersRepository) {
             for (ActerWithInitiative acter : actersRepository.getSortedActers().getArray()) {
                 acters.addActer(acter);
             }

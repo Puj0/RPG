@@ -6,27 +6,23 @@ public abstract class Enemy implements IEnemy {
 	private int attack;
 	private int defence;
 	private int initiative;
-	private boolean is_aggressive;
+	private boolean aggressive;
 	
 	Enemy(String name, int healthPoints, int attack, int defence,
-				 int initiative, boolean is_aggressive) {
+				 int initiative, boolean aggressive) {
 		super();
 		this.name = name;
 		this.healthPoints = healthPoints;
 		this.attack = attack;
 		this.defence = defence;
 		this.initiative = initiative;
-		this.is_aggressive = is_aggressive;
+		this.aggressive = aggressive;
 	}
 
 	public String getName() {
 		return name;
 	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+
 	public int getHealthPoints() {
 		return healthPoints;
 	}
@@ -37,8 +33,8 @@ public abstract class Enemy implements IEnemy {
 
     public void takeDamage(int damage) {
 		this.healthPoints -= damage;
-		if(!is_aggressive){
-			setIs_aggressive(true);
+		if(!aggressive){
+			setAggressive(true);
 		}
 	}
 
@@ -46,24 +42,16 @@ public abstract class Enemy implements IEnemy {
 		return attack;
 	}
 
-	public void setAttack(int attack) {
-		this.attack = attack;
-	}
-
 	public int getDefence() {
 		return defence;
 	}
 
-	public void setDefence(int defence) {
-		this.defence = defence;
+	public boolean isAggressive() {
+		return aggressive;
 	}
 
-	public boolean isIs_aggressive() {
-		return is_aggressive;
-	}
-
-	public void setIs_aggressive(boolean is_aggressive) {
-		this.is_aggressive = is_aggressive;
+	public void setAggressive(boolean aggressive) {
+		this.aggressive = aggressive;
 	}
 
 	public void defend(int damage) {

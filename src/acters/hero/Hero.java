@@ -38,11 +38,11 @@ public class Hero implements IHero {
 	}
 
 	public void takeDamage(int damage) {
-		healthPoints = getHealthPoints() - damage;
+		healthPoints -= damage;
 	}
 
 	public void replenishHealth(){
-		this.healthPoints = getHealthPoints() + 3;
+		healthPoints += 3;
 	}
 	
 	public int getAttack() {

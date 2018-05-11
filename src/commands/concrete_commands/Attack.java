@@ -15,16 +15,18 @@ public class Attack implements Command {
 
 	public void execute() {
 	    if (attacker instanceof Enemy){
-	        if(((Enemy) attacker).isIs_aggressive()){
-                int damage = Math.max(0, attacker.getAttack() - defender.getDefence());
-                defender.takeDamage(damage);
-                System.out.println(attacker.getName() + " attacked " + defender.getName() + ".");
+	        if(((Enemy) attacker).isAggressive()){
+                doDamage();
             }
         } else {
-            int damage = Math.max(0, attacker.getAttack() - defender.getDefence());
-            defender.takeDamage(damage);
-            System.out.println(attacker.getName() + " attacked " + defender.getName() + ".");
+            doDamage();
         }
+	}
+
+	private void doDamage(){
+		int damage = Math.max(0, attacker.getAttack() - defender.getDefence());
+		defender.takeDamage(damage);
+		System.out.println(attacker.getName() + " attacked " + defender.getName() + ".");
 	}
 
 }

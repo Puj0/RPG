@@ -1,6 +1,7 @@
 package game;
 
 import acters.ActersRepository;
+import acters.IActersRepository;
 import commands.CommandDispatcher;
 import dagger.Module;
 import dagger.Provides;
@@ -16,7 +17,7 @@ public class GameModule {
     }
     @Singleton
     @Provides
-    Game provideGame(ActersRepository actersRepository){
+    Game provideGame(IActersRepository actersRepository){
      return new Game.GameBuilder(rounds)
              .addActers(actersRepository)
              .addCommandDispatcher(new CommandDispatcher())

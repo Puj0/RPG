@@ -4,8 +4,6 @@ import acters.enemy.Animal;
 import acters.enemy.Troll;
 import acters.hero.Hero;
 import acters.hero.RoleClass;
-
-import javax.inject.Inject;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -14,7 +12,6 @@ public class ActersRepository implements IActersRepository {
     private SortedActersList sortedActers;
     private ThreadLocalRandom random = ThreadLocalRandom.current();
 
-    @Inject
     public ActersRepository() {
         sortedActers = new SortedActersList();
         createCharacters();
@@ -60,6 +57,7 @@ public class ActersRepository implements IActersRepository {
         sortedActers.addActer(new ActerWithInitiative(acter));
     }
 
+    @Override
     public SortedActersList getSortedActers() {
         return sortedActers;
     }
