@@ -26,8 +26,11 @@ sourceSets.test.java.srcDirs = ['test']
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
     testCompileOnly 'junit:junit:4.12'
     compile 'com.google.dagger:dagger:2.15'
     apt 'com.google.dagger:dagger-compiler:2.15'
     compile 'org.mockito:mockito-core:2.18.3'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
+
 }

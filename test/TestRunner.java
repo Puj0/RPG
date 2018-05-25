@@ -1,18 +1,19 @@
-import acters_test.enemy_test.AnimalTests;
-import acters_test.enemy_test.TrollTest;
-import acters_test.heroes_test.HeroTests;
+import acters.ActersTestSuite;
+import commands.CommandsTestSuite;
+import game.GameTestSuite;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
 public class TestRunner {
     public static void main(String[] args) {
-        Result result = JUnitCore.runClasses(AnimalTests.class, TrollTest.class, HeroTests.class);
+        Result result = JUnitCore.runClasses(ActersTestSuite.class, CommandsTestSuite.class,
+                GameTestSuite.class);
 
         for (Failure failure : result.getFailures()) {
             System.out.println(failure.toString());
         }
 
-        System.out.println(result.wasSuccessful());
+        System.out.println(result.wasSuccessful() ? "All tests passed" : "Testing failed");
     }
 }

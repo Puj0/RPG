@@ -10,8 +10,11 @@ public class Troll extends Enemy implements ITroll {
 	
 	@Override
 	public void defend(int damage) {
-		if (this.getHealthPoints() > 5) damage *= 0.7;
-		this.takeDamage(damage);
+		if (damage < 0) throw new IllegalArgumentException("Damage cannot be negative");
+		if (damage > 0) {
+			if (this.getHealthPoints() > 5) damage *= 0.7;
+			this.takeDamage(damage);
+		}
 	}
 
     @Override

@@ -1,4 +1,6 @@
-package acters;
+package acters.acters_repository;
+
+import acters.Acter;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -24,8 +26,8 @@ public class SortedActersList{
             expandCapacity();
         }
 
+        int index = size;
         size++;
-        int index = size - 1;
 
         while(index > 0){
             if (array[index-1].getInitiative() > acter.getInitiative()){

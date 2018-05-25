@@ -1,5 +1,6 @@
 package acters;
 
+import acters.acters_repository.SortedActersList;
 import dagger.internal.Factory;
 import javax.annotation.processing.Generated;
 

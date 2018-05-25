@@ -1,6 +1,6 @@
 package game;
 
-import acters.RepositoryModule;
+import acters.acters_repository.RepositoryModule;
 import dagger.Component;
 
 import javax.inject.Singleton;

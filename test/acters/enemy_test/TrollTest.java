@@ -1,10 +1,11 @@
-package acters_test.enemy_test;
+package acters.enemy_test;
 
 import acters.enemy.Troll;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TrollTest {
@@ -17,7 +18,24 @@ public class TrollTest {
     }
 
     @Test
-    public void isAggressive_shouldReturnFalse_givenDamageIsNotDealt() {
+    public void constructor_shouldSetNameHealthAttackDefenceInitiativeAndAggression(){
+        Troll troll = new Troll("Troll 1", 20, 2, 3, 5);
+
+        assertEquals(troll.getName(), "Troll 1");
+        assertEquals(troll.getHealthPoints(), 20);
+        assertEquals(troll.getAttack(), 2);
+        assertEquals(troll.getDefence(), 3);
+        assertEquals(troll.getInitiative(), 5);
+        assertTrue(troll.isAggressive());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void defend_shouldThrowException_givenDamageIsNegative(){
+        troll.defend(-5);
+    }
+
+    @Test
+    public void isAggressive_shouldReturnTrue_givenDamageIsNotDealt() {
         assertTrue(troll.isAggressive());
     }
 

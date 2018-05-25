@@ -10,10 +10,13 @@ public class Animal extends Enemy implements IAnimal {
 
 	@Override
 	public void defend(int damage) {
-		if (this.getHealthPoints() < 10) damage *= 1.15;
-		else if (this.getHealthPoints() > 25) damage *= 0.8;
-		this.takeDamage(damage);
-		setAggressive(true);
+		if (damage < 0) throw new IllegalArgumentException("Damage cannot be negative");
+		if (damage > 0) {
+			if (this.getHealthPoints() < 10) damage *= 1.15;
+			else if (this.getHealthPoints() > 25) damage *= 0.8;
+			this.takeDamage(damage);
+			setAggressive(true);
+		}
 	}
 
 	@Override

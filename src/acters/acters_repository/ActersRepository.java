@@ -1,5 +1,6 @@
-package acters;
+package acters.acters_repository;
 
+import acters.Acter;
 import acters.enemy.Animal;
 import acters.enemy.Troll;
 import acters.hero.Hero;
@@ -12,16 +13,16 @@ public class ActersRepository implements IActersRepository {
     private SortedActersList sortedActers;
     private ThreadLocalRandom random = ThreadLocalRandom.current();
 
-    public ActersRepository() {
+    public ActersRepository(int numberOfHeroes, int range) {
         sortedActers = new SortedActersList();
-        createCharacters();
+        createCharacters(numberOfHeroes, range);
     }
 
     @Override
-    public void createCharacters() {
+    public void createCharacters(int numberOfHeroes, int range) {
 
-        int numOfHeroes = random.nextInt(124, 127);
-        int numOfEnemies = random.nextInt(numOfHeroes, numOfHeroes * 2);
+        int numOfHeroes = random.nextInt(numberOfHeroes, numberOfHeroes + range + 1);
+        int numOfEnemies = random.nextInt(numOfHeroes, numOfHeroes * 2 + 1);
 
         createHeroes(numOfHeroes);
         createEnemies(numOfEnemies);

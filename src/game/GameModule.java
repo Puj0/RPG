@@ -1,7 +1,6 @@
 package game;
 
-import acters.ActersRepository;
-import acters.IActersRepository;
+import acters.acters_repository.IActersRepository;
 import commands.CommandDispatcher;
 import dagger.Module;
 import dagger.Provides;

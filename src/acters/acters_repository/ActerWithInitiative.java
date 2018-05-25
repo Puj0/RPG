@@ -1,4 +1,6 @@
-package acters;
+package acters.acters_repository;
+
+import acters.Acter;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -6,11 +8,15 @@ public class ActerWithInitiative{
 
     private Acter acter;
     private int initiative;
+    private ThreadLocalRandom random = ThreadLocalRandom.current();
 
     public ActerWithInitiative(Acter acter){
         this.acter = acter;
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        this.initiative = acter.getInitiative() + random.nextInt(1, 21);
+        this.initiative = acter.getInitiative() + getRandomInitiative();
+    }
+
+    private int getRandomInitiative(){
+        return random.nextInt(1, 21);
     }
 
     public Acter getActer(){

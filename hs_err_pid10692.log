@@ -304,8 +304,8 @@ Deoptimization events (0 events):
 No events
 
 Classes redefined (2 events):
-Event: 76.310 Thread 0x0000019ad084b000 redefined class name=acters.SortedActersList, count=1
-Event: 740.171 Thread 0x0000019ad084b000 redefined class name=acters.SortedActersList, count=2
+Event: 76.310 Thread 0x0000019ad084b000 redefined class name=acters.acters_repository.SortedActersList, count=1
+Event: 740.171 Thread 0x0000019ad084b000 redefined class name=acters.acters_repository.SortedActersList, count=2
 
 Internal exceptions (10 events):
 Event: 0.433 Thread 0x0000019aad3de000 Exception <a 'java/lang/NoSuchMethodError'{0x0000000089607ac0}: method resolution failed> (0x0000000089607ac0) thrown at [t:/workspace/hotspot/src/share/vm/prims/methodHandles.cpp, line 1256]

@@ -1,4 +1,4 @@
-package acters;
+package acters.acters_repository;
 
 import dagger.Module;
 import dagger.Provides;
@@ -10,6 +10,6 @@ public class RepositoryModule {
     @Singleton
     @Provides
     IActersRepository provideActersRepository(){
-        return new ActersRepository();
+        return new ActersRepository(120,5);
     }
 }

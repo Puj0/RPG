@@ -10,7 +10,22 @@ public abstract class Enemy implements IEnemy {
 	
 	Enemy(String name, int healthPoints, int attack, int defence,
 				 int initiative, boolean aggressive) {
-		super();
+		if (name == null){
+			throw new IllegalArgumentException("illegal name: [null]");
+		}
+
+		if (healthPoints < 0){
+			throw new IllegalArgumentException("illegal health: [" + healthPoints + "]");
+		}
+		if (attack < 0){
+			throw new IllegalArgumentException("illegal attack: [" + healthPoints + "]");
+		}
+		if (defence < 0){
+			throw new IllegalArgumentException("illegal health: [" + defence + "]");
+		}
+		if (initiative < 0){
+			throw new IllegalArgumentException("illegal attack: [" + initiative + "]");
+		}
 		this.name = name;
 		this.healthPoints = healthPoints;
 		this.attack = attack;
