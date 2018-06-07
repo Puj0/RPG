@@ -9,14 +9,12 @@ import acters.hero.Hero;
 import acters.hero.RoleClass;
 import commands.CommandDispatcher;
 
-import commands.concrete_commands.SkipRound;
+import database.ConnectionRPG;
 import org.junit.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -24,11 +22,16 @@ public class RoundTest {
 
     private Round round;
     private static final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
-    Acter acter1 = new Hero("Hero 1", RoleClass.BARBARIAN, 20, 2, 3, 46);
-    Acter acter2 = new Hero("Hero 2", RoleClass.BARBARIAN, 20, 2, 3, 26);
-    Acter acter3 = new Hero("Hero 3", RoleClass.BARBARIAN, 20, 2, 3, 25);
-    Acter acter4 = new Troll("Troll 1", 20, 2, 3, 3);
+    private PajinAntiRandom pajinAntiRandom = spy(new PajinAntiRandom());
+    private ConnectionRPG connectionRPG = mock(ConnectionRPG.class);
+    private PajinaStamparija pajinaStamparija = PajinaStamparija.getMockInstance(spy(PajinaStamparija.getInstance()));
+    private Acter acter1 = new Hero("Hero 1", RoleClass.BARBARIAN, 20, 5, 3, 46);
+    private Acter acter2 = new Hero("Hero 2", RoleClass.BARBARIAN, 20, 5, 3, 26);
+    private Acter acter3 = new Hero("Hero 3", RoleClass.BARBARIAN, 20, 5, 3, 25);
+    private Acter acter4 = new Troll("Troll 1", 20, 5, 3, 3);
+    private ActersRepository actersRepository = new ActersRepository(0,0, connectionRPG);
+    private SortedActersList sortedActersList = actersRepository.getSortedActers();
+    private IRandom random = new PajinAntiRandom();
 
     @BeforeClass
     public static void setUpOutputStream() {
@@ -37,14 +40,10 @@ public class RoundTest {
 
     @Before
     public void setUp(){
-        ActersRepository actersRepository = new ActersRepository(0,0);
-        SortedActersList sortedActersList = actersRepository.getSortedActers();
-        sortedActersList.addActer(new ActerWithInitiative(acter1));
-        sortedActersList.addActer(new ActerWithInitiative(acter2));
-        sortedActersList.addActer(new ActerWithInitiative(acter3));
-        sortedActersList.addActer(new ActerWithInitiative(acter4));
-
-        round = spy(new Round(sortedActersList, new ArrayList<>(), new CommandDispatcher()));
+        sortedActersList.addActer(new ActerWithInitiative(acter1,random));
+        sortedActersList.addActer(new ActerWithInitiative(acter2,random));
+        sortedActersList.addActer(new ActerWithInitiative(acter3,random));
+        sortedActersList.addActer(new ActerWithInitiative(acter4,random));
     }
 
     @Test
@@ -52,7 +51,7 @@ public class RoundTest {
         SortedActersList acters = new SortedActersList();
         ArrayList<Acter> removedActers = new ArrayList<>();
         CommandDispatcher dispatcher = new CommandDispatcher();
-        Round round = new Round(acters, removedActers, dispatcher);
+        Round round = new Round(acters, removedActers, dispatcher, pajinAntiRandom);
 
         Assert.assertEquals(acters, round.getActers());
         Assert.assertEquals(removedActers, round.getRemovedActers());
@@ -60,74 +59,59 @@ public class RoundTest {
     }
 
     @Test
-    public void runRound_shouldRunBattleRetreatAndCleanUpBattlefield(){
+    public void runRound_shouldPrint4Attacks_givenThereAreOpponents(){
+
+        doReturn(1).when(pajinAntiRandom).nextInt(0,4);
+        round = new Round(sortedActersList, new ArrayList<>(), new CommandDispatcher(), pajinAntiRandom);
         round.runRound();
-        verify(round).battle();
-        verify(round).retreat();
-        verify(round).cleanUpBattlefield();
+
+
+        verify(pajinAntiRandom, times(4)).nextInt(0,4);
+        verify(pajinaStamparija, times(4)).println(matches(".+ attacked .*"));
     }
 
     @Test
-    public void battle_shouldInvoke4Fights_givenActersSizeIs4(){
-        round.battle();
-        ActerWithInitiative[] attackers = round.getActers().getArray();
-        verify(round).fight(attackers[0].getActer());
-        verify(round).fight(attackers[1].getActer());
-        verify(round).fight(attackers[2].getActer());
-        verify(round).fight(attackers[3].getActer());
+    public void runRound_shouldPrint3HeroHadNoOneToAttack_givenThereAreNoOpponents(){
+        doReturn(1).when(pajinAntiRandom).nextInt(0,4);
+
+        sortedActersList = new SortedActersList();
+        sortedActersList.addActer(new ActerWithInitiative(acter1, random));
+        sortedActersList.addActer(new ActerWithInitiative(acter2, random));
+        sortedActersList.addActer(new ActerWithInitiative(acter3, random));
+
+        round = new Round(sortedActersList, new ArrayList<>(), new CommandDispatcher(), pajinAntiRandom);
+        round.runRound();
+        verify(pajinaStamparija, times(3)).println(matches(".* had no one to attack."));
     }
 
     @Test
-    public void createListOfDefenders_shouldReturn3Heroes_givenAttackerIsTroll(){
-        Acter attacker = round.getActers().getArray()[3].getActer();
-        Assert.assertEquals(3, round.createListOfDefenders(attacker).size());
+    public void battle_shouldPrint4ActersDecidedToSkipRound_givenRandomIs4(){
+
+        doReturn(4).when(pajinAntiRandom).nextInt(0,4);
+        round = new Round(sortedActersList, new ArrayList<>(), new CommandDispatcher(), pajinAntiRandom);
+        round.runRound();
+        verify(pajinaStamparija, times(4)).println(matches(".* decided to skip round."));
     }
 
     @Test
-    public void createListOfDefenders_shouldReturn1Troll_givenAttackerIsHero(){
-        Acter attacker = round.getActers().getArray()[0].getActer();
-        Assert.assertEquals(1, round.createListOfDefenders(attacker).size());
+    public void battle_shouldPrintTrollDied_givenHealthIsLessThan1(){
+        doReturn(0).when(pajinAntiRandom).nextInt(0,4);
+        sortedActersList.addActer(new ActerWithInitiative(new Hero("Hero 4", RoleClass.BARBARIAN, 20, 18, 1, 24),random));
+        round = new Round(sortedActersList, new ArrayList<>(), new CommandDispatcher(), pajinAntiRandom);
+        round.runRound();
+        verify(pajinaStamparija, times(4)).println(matches(".* attacked Troll 1."));
+        verify(pajinaStamparija, times(1)).println("Troll 1 has died.");
+        verify(pajinaStamparija, never()).println("Troll 1 attacked Hero 1.");
     }
 
     @Test
-    public void attack_shouldKillDefender_givenAttackIs24Defence3AndHealth20(){
-
-        Acter attacker = new Hero("Hero 1", RoleClass.BARBARIAN, 20, 24, 3, 46);
-        List<Acter> defender = new ArrayList<>();
-        defender.add(acter4);
-        round.attack(attacker, defender);
-        verify(round).killDefender(acter4);
-    }
-
-    @Test
-    public void attack_shouldNotKillDefender_givenAttackIs22Defence3AndHealth20(){
-
-        Acter attacker = new Hero("Hero 1", RoleClass.BARBARIAN, 20, 22, 3, 46);
-        List<Acter> defender = new ArrayList<>();
-        defender.add(acter4);
-        round.attack(attacker, defender);
-        verify(round, never()).killDefender(acter4);
-    }
-
-    @Test
-    public void killDefender_shouldRemoveDefender_givenHealthIsLessThan1(){
-        int numberOfRemovedBefore = round.getRemovedActers().size();
-        round.killDefender(acter4);
-        int numberOfRemovedAfter = round.getRemovedActers().size();
-        Assert.assertEquals(numberOfRemovedBefore + 1, numberOfRemovedAfter);
-    }
-
-    @Test
-    public void retreat_shouldRemoveActer_givenDefenderHasHealth1(){
-        int numberOfRemovedBefore = round.getRemovedActers().size();
-        Acter attacker = new Hero("Hero 1", RoleClass.BARBARIAN, 20, 22, 3, 46);
-        List<Acter> defender = new ArrayList<>();
-        defender.add(acter4);
-        round.attack(attacker, defender);
-        Assert.assertEquals(1, acter4.getHealthPoints());
-        round.retreat();
-        int numberOfRemovedAfter = round.getRemovedActers().size();
-        Assert.assertEquals(numberOfRemovedBefore + 1, numberOfRemovedAfter);
+    public void battle_shouldPrintTrollLeft_givenHealthIsLessThan2AndMoreThan0(){
+        doReturn(0).when(pajinAntiRandom).nextInt(0,4);
+        sortedActersList.addActer(new ActerWithInitiative(new Hero("Hero 4", RoleClass.BARBARIAN, 20, 16, 1, 24), random));
+        round = new Round(sortedActersList, new ArrayList<>(), new CommandDispatcher(), pajinAntiRandom);
+        round.runRound();
+        verify(pajinaStamparija, times(5)).println(matches(".* attacked .*"));
+        verify(pajinaStamparija, times(1)).println("Troll 1 has left the battle. Such a coward.");
     }
 
 

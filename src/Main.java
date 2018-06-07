@@ -1,4 +1,3 @@
-
 import game.DaggerGameComponent;
 import game.GameComponent;
 import game.GameModule;
@@ -16,7 +15,8 @@ public class Main {
 				.gameModule(new GameModule(rounds))
 				.build();
         Game game = gameComponent.inject();
-        game.runGame();
+		game.runGame();
+
 	}
 
 	private static int readNumOfRounds() {

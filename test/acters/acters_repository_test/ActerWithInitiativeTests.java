@@ -4,6 +4,8 @@ import acters.Acter;
 import acters.acters_repository.ActerWithInitiative;
 import acters.hero.Hero;
 import acters.hero.RoleClass;
+import game.IRandom;
+import game.PajinAntiRandom;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Assert;
@@ -17,11 +19,12 @@ public class ActerWithInitiativeTests {
 
     private Acter acter;
     private ActerWithInitiative acterWithInitiative;
+    private IRandom random = new PajinAntiRandom();
 
     @Before
     public void setUp(){
         acter = new Hero("Hero 1", RoleClass.BARBARIAN, 20, 2, 3, 5);
-        acterWithInitiative = new ActerWithInitiative(acter);
+        acterWithInitiative = new ActerWithInitiative(acter, random);
     }
 
     private static Object[] repeatTest40Times() {

@@ -1,17 +1,17 @@
 package acters.acters_repository;
 
-import com.sun.source.tree.AssertTree;
+import database.ConnectionRPG;
+import database.DbModule;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 public class RepositoryModuleTest {
 
-    RepositoryModule repositoryModule = spy(new RepositoryModule());
+    private RepositoryModule repositoryModule = spy(new RepositoryModule());
 
     @Test
-    public void provideActersRepository_shouldProvideActersRepository() {
-        Assert.assertEquals(ActersRepository.class, repositoryModule.provideActersRepository().getClass());
+    public void provideActersRepository_shouldProvideActersRepository(ConnectionRPG connectionRPG) {
+        Assert.assertEquals(ActersRepository.class, repositoryModule.provideActersRepository(connectionRPG).getClass());
     }
 }

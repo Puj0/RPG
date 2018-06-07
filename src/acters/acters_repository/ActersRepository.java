@@ -1,19 +1,25 @@
 package acters.acters_repository;
 
 import acters.Acter;
+import database.ConnectionRPG;
+import game.IRandom;
 import acters.enemy.Animal;
 import acters.enemy.Troll;
 import acters.hero.Hero;
 import acters.hero.RoleClass;
-import java.util.concurrent.ThreadLocalRandom;
+import game.ThreadRandom;
+
+import java.util.Arrays;
 
 
 public class ActersRepository implements IActersRepository {
 
     private SortedActersList sortedActers;
-    private ThreadLocalRandom random = ThreadLocalRandom.current();
+    private IRandom random = new ThreadRandom();
+    private ConnectionRPG connectionRPG;
 
-    public ActersRepository(int numberOfHeroes, int range) {
+    public ActersRepository(int numberOfHeroes, int range,ConnectionRPG connectionRPG ) {
+        this.connectionRPG = connectionRPG;
         sortedActers = new SortedActersList();
         createCharacters(numberOfHeroes, range);
     }
@@ -23,6 +29,12 @@ public class ActersRepository implements IActersRepository {
 
         int numOfHeroes = random.nextInt(numberOfHeroes, numberOfHeroes + range + 1);
         int numOfEnemies = random.nextInt(numOfHeroes, numOfHeroes * 2 + 1);
+
+        try {
+         connectionRPG.createActerTable();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         createHeroes(numOfHeroes);
         createEnemies(numOfEnemies);
@@ -39,7 +51,7 @@ public class ActersRepository implements IActersRepository {
 
     private void createEnemies(int numOfEnemies) {
         for (int i = 0; i < numOfEnemies; i++) {
-            boolean isTroll = (random.nextInt(1, 11) % 2) == 0;
+            boolean isTroll = (random.nextInt(1, 11) % 2) == 1;
             if (isTroll) {
                 Troll newTroll = new Troll("Troll " + (i + 1), random.nextInt(10, 26),
                     random.nextInt(3, 11), random.nextInt(2, 7),
@@ -54,8 +66,34 @@ public class ActersRepository implements IActersRepository {
         }
     }
 
+    @Override
+    public void addActersToDatabase(){
+        Arrays.stream(sortedActers.getArray())
+            .map(ActerWithInitiative::getActer)
+            .forEach(acter -> {
+                RoleClass roleClass = null;
+                if (acter instanceof Hero){
+                    roleClass = ((Hero) acter).getRoleClass();
+                }
+                try {
+                    connectionRPG.insertValueToActerTable(acter.getName(), roleClass, acter.getHealthPoints(),
+                            acter.getAttack(), acter.getDefence(), acter.getInitiative());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+    }
+
+    @Override
+    public SortedActersList getActersFromDatabase(){
+        SortedActersList sortedActersList = new SortedActersList();
+        connectionRPG.queryActersFromActerTable().stream()
+            .forEach(sortedActersList::addActer);
+        return sortedActersList;
+    }
+
     private void addActerToSortedActers(Acter acter) {
-        sortedActers.addActer(new ActerWithInitiative(acter));
+        sortedActers.addActer(new ActerWithInitiative(acter, random));
     }
 
     @Override

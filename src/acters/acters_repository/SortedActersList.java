@@ -12,7 +12,6 @@ public class SortedActersList{
 
     private ActerWithInitiative[] array;
 
-    @Inject
     public SortedActersList() {
         array = new ActerWithInitiative[]{};
     }

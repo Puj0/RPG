@@ -14,8 +14,8 @@ public class RunAwayTests {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
-    Acter acter = new Troll("Troll 1", 20, 10, 5, 2);
-    RunAway runAway = new RunAway(acter);
+    private Acter acter = new Troll("Troll 1", 20, 10, 5, 2);
+    private RunAway runAway = new RunAway(acter);
 
     @Before
     public void setUpStream(){

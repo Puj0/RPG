@@ -2,6 +2,7 @@ package acters.acters_repository;
 
 import dagger.Module;
 import dagger.Provides;
+import database.ConnectionRPG;
 
 import javax.inject.Singleton;
 
@@ -9,7 +10,7 @@ import javax.inject.Singleton;
 public class RepositoryModule {
     @Singleton
     @Provides
-    IActersRepository provideActersRepository(){
-        return new ActersRepository(120,5);
+    IActersRepository provideActersRepository(ConnectionRPG connectionRPG){
+        return new ActersRepository(120,5, connectionRPG);
     }
 }

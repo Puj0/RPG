@@ -16,11 +16,21 @@ public class GameModule {
     }
     @Singleton
     @Provides
-    Game provideGame(IActersRepository actersRepository){
+    Game provideGame(IActersRepository actersRepository, PajinaStamparija pajinaStamparija){
      return new Game.GameBuilder(rounds)
              .addActers(actersRepository)
              .addCommandDispatcher(new CommandDispatcher())
+             .addStamparija(pajinaStamparija)
              .build();
     }
 
+    @Singleton
+    @Provides
+    PajinaStamparija providePajinaStamparija(){
+        return PajinaStamparija.getInstance();
+    }
+
+    int getRounds() {
+        return rounds;
+    }
 }

@@ -1,6 +1,10 @@
 package acters.acters_repository;
 
 import acters.Acter;
+import game.Game;
+import game.IRandom;
+import game.PajinAntiRandom;
+import game.ThreadRandom;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -8,11 +12,12 @@ public class ActerWithInitiative{
 
     private Acter acter;
     private int initiative;
-    private ThreadLocalRandom random = ThreadLocalRandom.current();
+    private IRandom random = new PajinAntiRandom();
 
-    public ActerWithInitiative(Acter acter){
+    public ActerWithInitiative(Acter acter, IRandom random){
         this.acter = acter;
         this.initiative = acter.getInitiative() + getRandomInitiative();
+        this.random = random;
     }
 
     private int getRandomInitiative(){

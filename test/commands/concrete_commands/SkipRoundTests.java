@@ -14,8 +14,8 @@ public class SkipRoundTests {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
-    Acter acter = new Troll("Troll 1", 20, 10, 5, 2);
-    SkipRound skipRound = new SkipRound(acter);
+    private Acter acter = new Troll("Troll 1", 20, 10, 5, 2);
+    private SkipRound skipRound = new SkipRound(acter);
 
     @Before
     public void setUpStream(){
@@ -31,6 +31,5 @@ public class SkipRoundTests {
     public void execute_shouldPrintMessage(){
         skipRound.execute();
         Assert.assertEquals("Troll 1 decided to skip round.\r\n", outContent.toString());
-
     }
 }

@@ -4,6 +4,8 @@ import acters.acters_repository.ActerWithInitiative;
 import acters.acters_repository.SortedActersList;
 import acters.hero.Hero;
 import acters.hero.RoleClass;
+import game.IRandom;
+import game.PajinAntiRandom;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Assert;
@@ -18,15 +20,16 @@ import java.util.Collection;
 public class SortedActersListTests {
 
     private static SortedActersList sortedActersList;
+    private static IRandom random = new PajinAntiRandom();
 
     private static ActerWithInitiative acter1 = new ActerWithInitiative(
-            new Hero("Hero 1", RoleClass.BARBARIAN, 12, 5, 4, 2));
+            new Hero("Hero 1", RoleClass.BARBARIAN, 12, 5, 4, 2), random);
     private static ActerWithInitiative acter2 = new ActerWithInitiative(
-            new Hero("Hero 2", RoleClass.BARBARIAN, 12, 5, 4, 45));
+            new Hero("Hero 2", RoleClass.BARBARIAN, 12, 5, 4, 45), random);
     private static ActerWithInitiative acter3 = new ActerWithInitiative(
-            new Hero("Hero 3", RoleClass.BARBARIAN, 12, 5, 4, 67));
+            new Hero("Hero 3", RoleClass.BARBARIAN, 12, 5, 4, 67), random);
     private static ActerWithInitiative acter4 = new ActerWithInitiative(
-            new Hero("Hero 4", RoleClass.BARBARIAN, 12, 5, 4, 24));
+            new Hero("Hero 4", RoleClass.BARBARIAN, 12, 5, 4, 24), random);
 
     private ActerWithInitiative[] actersWithInitiatives;
 
