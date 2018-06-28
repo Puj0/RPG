@@ -1,18 +1,18 @@
 package commands.concrete_commands;
 
 import acters.Acter;
-import game.PajinaStamparija;
+import game.Printer;
 
 public class SkipRound implements Command {
 
     private Acter acter;
-    private PajinaStamparija pajinaStamparija = PajinaStamparija.getInstance();
+    private Printer printer = Printer.getInstance();
 
     public SkipRound(Acter acter){
         this.acter = acter;
     }
 
     public void execute() {
-        pajinaStamparija.println(acter.getName() + " decided to skip round.");
+        printer.println(acter.getName() + " decided to skip round.");
     }
 }

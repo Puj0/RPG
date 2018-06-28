@@ -30,6 +30,6 @@ public class SkipRoundTests {
     @Test
     public void execute_shouldPrintMessage(){
         skipRound.execute();
-        Assert.assertEquals("Troll 1 decided to skip round.\r\n", outContent.toString());
+        Assert.assertEquals("Troll 1 decided to skip round.\n", outContent.toString());
     }
 }

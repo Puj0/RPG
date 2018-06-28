@@ -34,3 +34,4 @@ dependencies {
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
     compile group: 'com.h2database', name: 'h2', version: '1.4.197'
 }
+

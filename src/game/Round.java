@@ -19,7 +19,7 @@ class Round {
     private CommandDispatcher dispatcher;
     private CommandAbstractFactory commandFactory = new CommandFactory();
     private IRandom random;
-    private PajinaStamparija pajinaStamparija = PajinaStamparija.getInstance();
+    private Printer printer = Printer.getInstance();
 
 
     Round(SortedActersList acters, ArrayList<Acter> removedActers, CommandDispatcher dispatcher,IRandom random) {
@@ -52,7 +52,7 @@ class Round {
         List<Acter> defenders = createListOfDefenders(attacker);
 
         if (defenders.isEmpty()) {
-            pajinaStamparija.println(attacker.getName() + " had no one to attack.");
+            printer.println(attacker.getName() + " had no one to attack.");
             return;
         }
 
@@ -82,7 +82,7 @@ class Round {
 
     private void killDefender(Acter defender) {
         removedActers.add(defender);
-        pajinaStamparija.println(defender.getName() + " has died.");
+        printer.println(defender.getName() + " has died.");
     }
 
     private void retreat() {

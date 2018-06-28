@@ -25,7 +25,7 @@ public class GameTest {
     private ActersRepository actersRepository = new ActersRepository(5, 0, connectionRPG);
     private CommandDispatcher commandDispatcher = new CommandDispatcher();
     private Game game;
-    private PajinaStamparija pajinaStamparija = spy(PajinaStamparija.class);
+    private Printer printer = spy(Printer.class);
 
     private Acter acter1 = new Hero("Hero 1", RoleClass.BARBARIAN, 20, 2, 3, 46);
     private Acter acter2 = new Hero("Hero 2", RoleClass.BARBARIAN, 20, 2, 3, 26);
@@ -41,43 +41,41 @@ public class GameTest {
     public void setUp(){
     }
 
-    @Ignore
     @Test
     public void runGame_shouldPrintCharacterInitiativesAndPrintTimesUpWhenAllRoundsHavePassedAndGameIsNotDone(){
         game = new Game.GameBuilder(ZERO_ROUNDS)
                 .addActers(actersRepository)
                 .addCommandDispatcher(commandDispatcher)
-                .addStamparija(pajinaStamparija)
+                .addPrinter(printer)
                 .build();
         game.runGame();
-        verify(pajinaStamparija, times(10)).println(matches(".* has initiative: 2"));
-        verify(pajinaStamparija).println("Time's up!");
+        verify(printer, atLeast(10)).println(matches(".* has initiative: [0-9]*"));
+        verify(printer, atMost(15)).println(matches(".* has initiative: [0-9]*"));
+        verify(printer).println("Time's up!");
     }
 
-    @Ignore
     @Test
     public void runGame_shouldPrintCharacterInitiativesAndPrintTimesUpWhenAllRoundsHavePassedAndGameIsDone(){
         game = new Game.GameBuilder(ZERO_ROUNDS)
                 .addRace(Arrays.asList(acter1, acter2, acter3))
                 .addCommandDispatcher(commandDispatcher)
-                .addStamparija(pajinaStamparija)
+                .addPrinter(printer)
                 .build();
         game.runGame();
 
-        verify(pajinaStamparija).println("Heroes were victorious");
-        verify(pajinaStamparija).println("It took 0 rounds.");
+        verify(printer).println("Heroes were victorious");
+        verify(printer).println("It took 0 rounds.");
     }
 
-    @Ignore
     @Test
     public void runGame_shouldPrintStateAtTheEndOfRound(){
         game = new Game.GameBuilder(1)
                 .addRace(Arrays.asList(acter1, acter2, acter3, acter4))
                 .addCommandDispatcher(commandDispatcher)
-                .addStamparija(pajinaStamparija)
+                .addPrinter(printer)
                 .build();
         game.runGame();
-        verify(pajinaStamparija).println("End of round 1. \n" +
+        verify(printer).println("End of round 1. \n" +
                 "Heroes - Trolls - Animals \n" +
                 "3\t\t1\t\t0");
     }

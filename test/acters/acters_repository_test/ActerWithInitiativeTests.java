@@ -5,7 +5,7 @@ import acters.acters_repository.ActerWithInitiative;
 import acters.hero.Hero;
 import acters.hero.RoleClass;
 import game.IRandom;
-import game.PajinAntiRandom;
+import game.Derandomizer;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Assert;
@@ -19,7 +19,7 @@ public class ActerWithInitiativeTests {
 
     private Acter acter;
     private ActerWithInitiative acterWithInitiative;
-    private IRandom random = new PajinAntiRandom();
+    private IRandom random = new Derandomizer();
 
     @Before
     public void setUp(){

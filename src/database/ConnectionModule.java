@@ -6,10 +6,10 @@ import dagger.Provides;
 import javax.inject.Singleton;
 
 @Module
-public class DbModule {
+public class ConnectionModule {
     @Singleton
     @Provides
-    ConnectionRPG provideConnectionRPG(){
+    public ConnectionRPG provideConnectionRPG(){
         try {
             return ConnectionRPG.getInstance();
         } catch (Exception e) {

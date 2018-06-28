@@ -1,18 +1,14 @@
 package acters.acters_repository;
 
 import acters.Acter;
-import game.Game;
 import game.IRandom;
-import game.PajinAntiRandom;
-import game.ThreadRandom;
-
-import java.util.concurrent.ThreadLocalRandom;
+import game.Derandomizer;
 
 public class ActerWithInitiative{
 
     private Acter acter;
     private int initiative;
-    private IRandom random = new PajinAntiRandom();
+    private IRandom random = new Derandomizer();
 
     public ActerWithInitiative(Acter acter, IRandom random){
         this.acter = acter;

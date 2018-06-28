@@ -30,7 +30,7 @@ public class RunAwayTests {
     @Test
     public void execute_shouldPrintMessage(){
         runAway.execute();
-        Assert.assertEquals("Troll 1 has left the battle. Such a coward.\r\n", outContent.toString());
+        Assert.assertEquals("Troll 1 has left the battle. Such a coward.\n", outContent.toString());
 
     }
 

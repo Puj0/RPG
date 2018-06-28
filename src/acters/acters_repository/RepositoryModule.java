@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 public class RepositoryModule {
     @Singleton
     @Provides
-    IActersRepository provideActersRepository(ConnectionRPG connectionRPG){
+    public IActersRepository provideActersRepository(ConnectionRPG connectionRPG){
         return new ActersRepository(120,5, connectionRPG);
     }
 }
